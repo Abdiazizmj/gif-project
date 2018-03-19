@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Animal Gifs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+</head>
+
+<body>
+    <button data-animal="horse">neigh</button>
+    <button data-animal="bull">bellow</button>
+    <button data-animal="bird">chirp</button>
+    <div id="gifs-appear-here">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript"> 
+
+        $("button").on("click", function () {
+            var animal = $(this).attr("data-animal");
+
+            var querURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=fj61IDTAYN8dB18Djz0WfGGIKc2vHD2f&limit=10";
+
+            $.ajax({
+                url: querURL,
+                method: "GET"
+            })
+
+                .then(function (response) {
+                    console.log(querURL);
+                    console.log(response);
+                    var results = response.data;
+                    for (var i = 0; i < results.length; i++) {
+                        var animalDiv = $("<div>");
+
+                        var p = $("<p>").text("Rating; " + results[i].rating);
+                        var animalImage = $("<img>");
+                        animalImage.addclass= "gif"
+                        animalImage.attr("src", results[i].images.fixed_height.url);
+                        animalImage.attr("data-animate", results[i].images.fixed_height.url);
+                        animalImage.attr("data-still", results[i].images.fixed_height_still.url);
+                        animalImage.attr("data-still", "still");
+                        animalDiv.append(p);
+                        animalDiv.append(animalImage);
+
+                            $(".gif").on("click", function() {
+
+                        if (state === "still") {
+                            $(this).attr("src", $(this).attr("data-animate"));
+                            $(this).attr("data-state", "animate");
+                        } else {
+                            $(this).attr("src", $(this).attr("data-still"));
+                            $(this).attr("data-state", "still");
+                        }
+
+                    })
+
+
+
+                        animalDiv.append(p);
+                        animalDiv.append(animalImage);
+                        $("#gifs-appear-here").prepend(animalDiv);
+
+
+                    }
+                })
+        })
+
+    </script>
+</body>
+
+</html>
